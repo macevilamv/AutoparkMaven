@@ -1,10 +1,17 @@
-package by.incubator.autopark.vehicle;
+package by.incubator.autopark.service;
+
+import by.incubator.autopark.vehicle.CarColor;
+import by.incubator.autopark.vehicle.VehicleType;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TechnicalSpecialist {
     public static final int LOWER_LIMIT_MANUFACTURE_YEAR = 1886;
+
+    public TechnicalSpecialist() {
+        System.out.println("Hello from TechSpec");
+    }
 
     public static boolean validateManufactureYear(int year) {
         return year >= LOWER_LIMIT_MANUFACTURE_YEAR;

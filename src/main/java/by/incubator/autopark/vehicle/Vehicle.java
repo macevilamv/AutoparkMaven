@@ -8,7 +8,7 @@ import by.incubator.autopark.exceptions.NotVehicleException;
 import by.incubator.autopark.engine.*;
 import by.incubator.autopark.rent.Rent;
 
-import static by.incubator.autopark.vehicle.TechnicalSpecialist.*;
+import static by.incubator.autopark.service.TechnicalSpecialist.*;
 
 public class Vehicle implements Comparable<Vehicle> {
     private VehicleType type;
