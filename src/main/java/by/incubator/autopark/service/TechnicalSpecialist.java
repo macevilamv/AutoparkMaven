@@ -10,7 +10,6 @@ public class TechnicalSpecialist {
     public static final int LOWER_LIMIT_MANUFACTURE_YEAR = 1886;
 
     public TechnicalSpecialist() {
-        System.out.println("Hello from TechSpec");
     }
 
     public static boolean validateManufactureYear(int year) {
