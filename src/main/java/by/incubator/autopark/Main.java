@@ -9,18 +9,20 @@ import by.incubator.autopark.vehicle.*;
 import by.incubator.autopark.infrastructure.core.impl.ApplicationContext;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException, ParseException {
         Map<Class<?>, Class<?>> interfaceToImplementations = new HashMap<>();
-        interfaceToImplementations.put(ObjectConfigurator.class, AutoWiredObjectConfigurators.class);
-        ApplicationContext context =
-                new ApplicationContext("by", interfaceToImplementations);
+        interfaceToImplementations.put(Fixer.class, BadMechanicService.class);
+
+        ApplicationContext context = new ApplicationContext("by", interfaceToImplementations);
         VehicleCollection vehicleCollection = context.getObject(VehicleCollection.class);
         Workroom workroom = context.getObject(Workroom.class);
-        vehicleCollection.display();
+
+        workroom.checkAllVehicle(Arrays.asList(initVehicleArray()));
     }
 
     private static void pullIntoGarage(List<Vehicle> vehicles, Garage garage) {

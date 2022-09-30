@@ -16,6 +16,10 @@ public class JavaConfig implements Config {
     public <T> Class<? extends T> getImplementation(Class<T> target) {
         Set<Class<? extends T>> subTypes = scanner.getSubTypesOf(target);
 
+        if (interfaceToImplementation.containsKey(target)) {
+            return (Class<? extends T>) interfaceToImplementation.get(target);
+        }
+
         if (subTypes.size() != 1) {
             throw new RuntimeException("target interface has 0 or more then one implementation");
         } else {
@@ -28,13 +32,3 @@ public class JavaConfig implements Config {
         return this.scanner;
     }
 }
-
-
-
-
-
-
-
-
-
-
