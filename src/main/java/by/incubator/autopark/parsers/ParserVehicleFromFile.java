@@ -75,60 +75,39 @@ public class ParserVehicleFromFile {
     }
 
     private static VehicleType createType(String csvStringOfType) {
-        int id;
-        String typeName;
-        double tax;
         String[] typeParametersBuffer = csvStringOfType.split(",");
-
-        id = Integer.parseInt(typeParametersBuffer[CONFIG.get("TYPE-CSV_ID")]);
-        typeName = typeParametersBuffer[CONFIG.get("TYPE-CSV_NAME")];
-        tax = Double.parseDouble(typeParametersBuffer[CONFIG.get("TYPE-CSV_TAX")]);
+        int id = Integer.parseInt(typeParametersBuffer[CONFIG.get("TYPE-CSV_ID")]);;
+        String typeName = typeParametersBuffer[CONFIG.get("TYPE-CSV_NAME")];;
+        double tax = Double.parseDouble(typeParametersBuffer[CONFIG.get("TYPE-CSV_TAX")]);;
 
         return new VehicleType(id, typeName, tax);
     }
 
     private static Rent createRent(String csvStringOfRent) throws ParseException {
-        int vehicleId;
-        String rentDate;
-        double cost;
-        DateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
         String[] rentParametersBuffer = csvStringOfRent.split(",");
-
-        vehicleId = Integer.parseInt(rentParametersBuffer[CONFIG.get("RENT-CSV_CAR_ID")]);
-        rentDate = simpleDateFormat.format(simpleDateFormat.
-                parse(rentParametersBuffer[CONFIG.get("RENT-CSV_DATE")]));
-        cost = Double.parseDouble(rentParametersBuffer[CONFIG.get("RENT-CSV_COST")]);
+        int vehicleId = Integer.parseInt(rentParametersBuffer[CONFIG.get("RENT-CSV_CAR_ID")]);;
+        DateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        String rentDate = simpleDateFormat.format(simpleDateFormat.
+                parse(rentParametersBuffer[CONFIG.get("RENT-CSV_DATE")]));;
+        double cost = Double.parseDouble(rentParametersBuffer[CONFIG.get("RENT-CSV_COST")]);
 
         return new Rent(vehicleId, rentDate, cost);
     }
 
     private Vehicle createVehicle(String csvStringOfVehicle) throws IOException, ParseException {
-        double mass;
-        int mileage;
-        int manufactureYear;
-        int id;
-        int typeId;
-        VehicleType vehicleType;
-        CarColor color;
-        String model;
-        String registrationNumber;
-        String engineName;
-        Startable engine;
-        List<Rent> rents;
         String[] vehicleParametersBuffer = csvStringOfVehicle.split(",");
-
-        id = Integer.parseInt(vehicleParametersBuffer[CONFIG.get("VEHICLE-CSV_ID")]);
-        typeId = Integer.parseInt(vehicleParametersBuffer[CONFIG.get("VEHICLE-CSV_TYPE_ID")]);
-        vehicleType = generateTypeById(typeId);
-        model = vehicleParametersBuffer[CONFIG.get("VEHICLE-CSV_MODEL")];
-        registrationNumber = vehicleParametersBuffer[CONFIG.get("VEHICLE-CSV_NUMBER")];
-        mass = Double.parseDouble(vehicleParametersBuffer[CONFIG.get("VEHICLE-CSV_WEIGHT")]);
-        manufactureYear = Integer.parseInt(vehicleParametersBuffer[CONFIG.get("VEHICLE-CSV_YEAR")]);
-        mileage = Integer.parseInt(vehicleParametersBuffer[CONFIG.get("VEHICLE-CSV_MILEAGE")]);
-        color = CarColor.valueOf(vehicleParametersBuffer[CONFIG.get("VEHICLE-CSV_COLOR")].toUpperCase(Locale.ROOT));
-        engineName = vehicleParametersBuffer[CONFIG.get("VEHICLE-CSV_ENGINE")];
-        engine = parseEngine(engineName, vehicleParametersBuffer, CONFIG);
-        rents = generateRentListById(id);
+        int id = Integer.parseInt(vehicleParametersBuffer[CONFIG.get("VEHICLE-CSV_ID")]);
+        int typeId = Integer.parseInt(vehicleParametersBuffer[CONFIG.get("VEHICLE-CSV_TYPE_ID")]);
+        VehicleType vehicleType = generateTypeById(typeId);
+        String model = vehicleParametersBuffer[CONFIG.get("VEHICLE-CSV_MODEL")];
+        String registrationNumber = vehicleParametersBuffer[CONFIG.get("VEHICLE-CSV_NUMBER")];
+        double mass = Double.parseDouble(vehicleParametersBuffer[CONFIG.get("VEHICLE-CSV_WEIGHT")]);
+        int manufactureYear = Integer.parseInt(vehicleParametersBuffer[CONFIG.get("VEHICLE-CSV_YEAR")]);
+        int mileage = Integer.parseInt(vehicleParametersBuffer[CONFIG.get("VEHICLE-CSV_MILEAGE")]);
+        CarColor color = CarColor.valueOf(vehicleParametersBuffer[CONFIG.get("VEHICLE-CSV_COLOR")].toUpperCase(Locale.ROOT));
+        String engineName = vehicleParametersBuffer[CONFIG.get("VEHICLE-CSV_ENGINE")];
+        Startable engine = parseEngine(engineName, vehicleParametersBuffer, CONFIG);
+        List<Rent> rents = generateRentListById(id);
 
         return new Vehicle(id, vehicleType, color, model, registrationNumber, mass,
                 mileage, manufactureYear, engine, rents);
