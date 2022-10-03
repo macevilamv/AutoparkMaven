@@ -1,4 +1,4 @@
-package by.incubator.autopark.ParsingUtils;
+package by.incubator.autopark.parsers;
 
 import java.util.List;
 import java.util.regex.Matcher;

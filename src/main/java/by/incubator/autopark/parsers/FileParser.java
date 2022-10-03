@@ -1,4 +1,4 @@
-package by.incubator.autopark.ParsingUtils;
+package by.incubator.autopark.parsers;
 
 import java.io.*;
 import java.util.ArrayList;

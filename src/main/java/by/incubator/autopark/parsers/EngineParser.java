@@ -1,4 +1,4 @@
-package by.incubator.autopark.ParsingUtils;
+package by.incubator.autopark.parsers;
 
 import by.incubator.autopark.engine.DieselEngine;
 import by.incubator.autopark.engine.ElectricalEngine;

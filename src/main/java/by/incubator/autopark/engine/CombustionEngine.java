@@ -1,7 +1,7 @@
 package by.incubator.autopark.engine;
 
 import by.incubator.autopark.exceptions.NotVehicleException;
-import by.incubator.autopark.vehicle.TechnicalSpecialist;
+import by.incubator.autopark.service.TechnicalSpecialist;
 
 public class CombustionEngine extends AbstractEngine {
     private double engineVolume;

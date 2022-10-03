@@ -2,34 +2,27 @@ package by.incubator.autopark;
 
 import by.incubator.autopark.collections.VehicleCollection;
 import by.incubator.autopark.engine.DieselEngine;
-import by.incubator.autopark.rent.Rent;
-import by.incubator.autopark.service.CarWash;
-import by.incubator.autopark.service.Garage;
-import by.incubator.autopark.service.MechanicService;
+import by.incubator.autopark.infrastructure.configurators.ObjectConfigurator;
+import by.incubator.autopark.infrastructure.configurators.impl.AutoWiredObjectConfigurators;
+import by.incubator.autopark.service.*;
 import by.incubator.autopark.vehicle.*;
+import by.incubator.autopark.infrastructure.core.impl.ApplicationContext;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.util.*;
 
 public class Main {
-    private static final String VEHICLES_CSV = "vehicles.csv";
-    private static final String TYPES_CSV = "types.csv";
-    private static final String RENTS_CSV = "rents.csv";
-
     public static void main(String[] args) throws IOException, ParseException {
-        VehicleCollection vehicleCollection = new VehicleCollection(TYPES_CSV, VEHICLES_CSV, RENTS_CSV);
+        Map<Class<?>, Class<?>> interfaceToImplementations = new HashMap<>();
+        interfaceToImplementations.put(Fixer.class, BadMechanicService.class);
 
-        List<VehicleType> vehicleTypes = vehicleCollection.loadTypes(TYPES_CSV);
-        List<Vehicle> vehicles = vehicleCollection.loadVehicles(VEHICLES_CSV);
-        List<Rent> rents = vehicleCollection.loadRents(RENTS_CSV);
-        MechanicService mechanicService = new MechanicService();
-        Garage garage = new Garage();
+        ApplicationContext context = new ApplicationContext("by", interfaceToImplementations);
+        VehicleCollection vehicleCollection = context.getObject(VehicleCollection.class);
+        Workroom workroom = context.getObject(Workroom.class);
 
-        detectBreakages(vehicles, mechanicService);
-        repair(vehicles, mechanicService);
-        CarWash.launchCarWash(vehicles);
-        pullIntoGarage(vehicles, garage);
+        workroom.checkAllVehicle(Arrays.asList(initVehicleArray()));
     }
 
     private static void pullIntoGarage(List<Vehicle> vehicles, Garage garage) {
