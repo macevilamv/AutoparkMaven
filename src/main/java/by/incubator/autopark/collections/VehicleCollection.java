@@ -1,6 +1,8 @@
 package by.incubator.autopark.collections;
 
-import by.incubator.autopark.parsers.ParserVehicleFromFile;
+import by.incubator.autopark.parsers.csv_parsers.VehicleParserFromCsvFile;
+import by.incubator.autopark.parsers.csv_parsers.RentsParserFromCsvFile;
+import by.incubator.autopark.parsers.csv_parsers.VehicleTypeParserFromCsvFile;
 import by.incubator.autopark.rent.Rent;
 import by.incubator.autopark.vehicle.Vehicle;
 import by.incubator.autopark.vehicle.VehicleType;
@@ -15,7 +17,11 @@ public class VehicleCollection {
     private List<Rent> rents;
     private List<Vehicle> vehicles;
     @Autowired
-    private ParserVehicleFromFile parser;
+    private VehicleParserFromCsvFile vehicleParserFromCsvFile;
+    @Autowired
+    private VehicleTypeParserFromCsvFile typeParser;
+    @Autowired
+    private RentsParserFromCsvFile rentsParserFromCsvFile;
 
     public VehicleCollection() {
     }
@@ -23,9 +29,9 @@ public class VehicleCollection {
     @SneakyThrows
     @InitMethod
     public void init() {
-        this.types = parser.loadTypes();
-        this.rents = parser.loadRents();
-        this.vehicles = parser.loadVehicles();
+        this.types = typeParser.loadVehicleTypes();
+        this.rents = rentsParserFromCsvFile.loadRents();
+        this.vehicles = vehicleParserFromCsvFile.loadVehicles();
     }
 
     public void insert(int index, Vehicle vehicle) {

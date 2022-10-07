@@ -1,6 +1,6 @@
 package by.incubator.autopark.service;
 
-import by.incubator.autopark.parsers.ParserBreakingsFromFile;
+import by.incubator.autopark.parsers.csv_parsers.BreakingParserFromCsvFile;
 import by.incubator.autopark.vehicle.Vehicle;
 import by.incubator.autopark.infrastructure.core.annotations.Autowired;
 
@@ -13,7 +13,7 @@ public class MechanicService implements Fixer {
             {"Фильтр", "Втулка", "Вал", "Ось", "Свеча", "Масло", "ГРМ", "ШРУС"};
     private final int MAX_DEFECTS_NUM = 12;
     @Autowired
-    private ParserBreakingsFromFile parser;
+    private BreakingParserFromCsvFile parser;
 
     public MechanicService() {
     }

@@ -1,15 +1,17 @@
 package by.incubator.autopark.vehicle;
 
+import by.incubator.autopark.engine.CombustionEngine;
+import by.incubator.autopark.engine.Startable;
+import by.incubator.autopark.exceptions.NotVehicleException;
+import by.incubator.autopark.rent.Rent;
+import by.incubator.autopark.vehicle.CarColor;
+import by.incubator.autopark.vehicle.VehicleType;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import by.incubator.autopark.exceptions.NotVehicleException;
-import by.incubator.autopark.engine.*;
-import by.incubator.autopark.rent.Rent;
-
 import static by.incubator.autopark.service.TechnicalSpecialist.*;
-
 public class Vehicle implements Comparable<Vehicle> {
     private VehicleType type;
     private CarColor color;
