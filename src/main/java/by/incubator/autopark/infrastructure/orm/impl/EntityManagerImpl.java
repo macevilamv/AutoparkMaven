@@ -17,6 +17,9 @@ public class EntityManagerImpl implements EntityManager {
     @Autowired
     Context context;
 
+    public EntityManagerImpl() {
+    }
+
     @Override
     public <T> Optional<T> get(Long id, Class<T> clazz) {
         return dataBaseService.get(id, clazz);

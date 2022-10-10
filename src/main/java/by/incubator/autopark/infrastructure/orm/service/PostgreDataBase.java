@@ -3,6 +3,7 @@ package by.incubator.autopark.infrastructure.orm.service;
 import by.incubator.autopark.exceptions.IsNotAnnotatedByTableException;
 import by.incubator.autopark.infrastructure.core.Context;
 import by.incubator.autopark.infrastructure.core.annotations.Autowired;
+import by.incubator.autopark.infrastructure.core.annotations.InitMethod;
 import by.incubator.autopark.infrastructure.orm.ConnectionFactory;
 import by.incubator.autopark.infrastructure.orm.annotations.Column;
 import by.incubator.autopark.infrastructure.orm.annotations.ID;
@@ -21,7 +22,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class PostgreDataBase {
-    private static final String SEQ_NAME = "id_seq";
     private static final String CHECK_SEQ_SQL_PATTERN =
             "SELECT EXISTS (\n"
                     + "SELECT FROM information_schema.sequences \n"
@@ -39,7 +39,7 @@ public class PostgreDataBase {
                     + "AND table_name  = '%s'\n" + ");";
     private static final String CREATE_TABLE_SQL_PATTERN =
             "CREATE TABLE %s (\n"
-                    + " %s integer PRIMARY KEY DEFAULT nextval('%s'), "
+                    + " %s SERIAL PRIMARY KEY, "
                     + "%S\n);";
     private static final String INSERT_SQL_PATTERN =
             "INSERT INTO %s(%s)\n"
@@ -53,11 +53,11 @@ public class PostgreDataBase {
     @Autowired
     private Context context;
 
+    @InitMethod
     public void init() {
         initializeClassToSql();
         initializeInsertPatternByClass();
         initializeInsertByClassPattern();
-        checkIdSeq();
         validateEntitiesTablesToExist();
     }
 
@@ -127,8 +127,9 @@ public class PostgreDataBase {
 
         for (Field field : clazz.getDeclaredFields()) {
             if (field.isAnnotationPresent(Column.class) || field.isAnnotationPresent(ID.class)) {
-                field.setAccessible(true);
-                field.set(object, resultSet.getObject(field.getName()));
+                String setterName = StringProcessor.generateSetterName(field);
+                Method setterMethod = object.getClass().getMethod(setterName, field.getType());
+                invokeSetterMethodByFieldType(setterMethod, field, object, resultSet);
             }
         }
         return object;
@@ -170,31 +171,26 @@ public class PostgreDataBase {
                         }));
     }
 
-    private void checkIdSeq() {
-        String sql = String.format(CHECK_SEQ_SQL_PATTERN, SEQ_NAME);
-
-        try (Connection connection = factory.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(sql)) {
-
-            if (resultSet.next()) {
-                if (!resultSet.getBoolean("exists")) {
-                    createIdSeq();
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+    @SneakyThrows
+    private void invokeSetterMethodByFieldType(Method setterMethod, Field field, Object object, ResultSet resultSet) {
+        if (field.getType() == String.class) {
+            setterMethod.invoke(object, resultSet.getString(field.getName()));
         }
-    }
 
-    private void createIdSeq() {
-        String sql = String.format(CREATE_ID_SEQ_PATTERN, SEQ_NAME);
+        if (field.getType() == Integer.class) {
+            setterMethod.invoke(object, resultSet.getInt(field.getName()));
+        }
 
-        try (Connection connection = factory.getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.execute(sql);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        if (field.getType() == Long.class) {
+            setterMethod.invoke(object, resultSet.getLong(field.getName()));
+        }
+
+        if (field.getType() == Double.class) {
+            setterMethod.invoke(object, resultSet.getDouble(field.getName()));
+        }
+
+        if (field.getType() == Date.class) {
+            setterMethod.invoke(object, resultSet.getDate(field.getName()));
         }
     }
 
@@ -234,8 +230,7 @@ public class PostgreDataBase {
 
     public String makeCreateSqlQuery(Class<?> type, String tableName, String fields) {
         String idField = findIdField(type);
-        String createQuery = String.format(CREATE_TABLE_SQL_PATTERN, tableName, idField, SEQ_NAME, fields);
-        System.out.println(createQuery);
+        String createQuery = String.format(CREATE_TABLE_SQL_PATTERN, tableName, idField, fields);
 
         return createQuery;
     }

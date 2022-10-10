@@ -1,6 +1,6 @@
 package by.incubator.autopark.parsers.csv_parsers;
 
-import by.incubator.autopark.dto.entity.TypeEntity;
+import by.incubator.autopark.entity.TypeEntity;
 import by.incubator.autopark.vehicle.VehicleType;
 
 import java.io.File;
@@ -48,9 +48,9 @@ public class VehicleTypeParserFromCsvFile {
 
     private TypeEntity createTypeEntity(String csvStringOfType) {
         String[] typeParametersBuffer = csvStringOfType.split(",");
-        Integer id = Integer.parseInt(typeParametersBuffer[CsvIndexingParser.CSV_INDEX.get("TYPE-CSV_ID")]);;
-        String typeName = typeParametersBuffer[CsvIndexingParser.CSV_INDEX.get("TYPE-CSV_NAME")];;
-        Double tax = Double.parseDouble(typeParametersBuffer[CsvIndexingParser.CSV_INDEX.get("TYPE-CSV_TAX")]);;
+        Long id = Long.parseLong(typeParametersBuffer[CsvIndexingParser.CSV_INDEX.get("TYPE-CSV_ID")]);
+        String typeName = typeParametersBuffer[CsvIndexingParser.CSV_INDEX.get("TYPE-CSV_NAME")];
+        Double tax = Double.parseDouble(typeParametersBuffer[CsvIndexingParser.CSV_INDEX.get("TYPE-CSV_TAX")]);
 
         return new TypeEntity(id, typeName, tax);
     }

@@ -1,10 +1,10 @@
-package by.incubator.autopark.dto.entity.service;
+package by.incubator.autopark.entity.service;
 
-import by.incubator.autopark.dto.entity.TypeEntity;
+import by.incubator.autopark.entity.TypeEntity;
 import by.incubator.autopark.infrastructure.core.annotations.Autowired;
 import by.incubator.autopark.infrastructure.core.annotations.InitMethod;
 import by.incubator.autopark.infrastructure.orm.EntityManager;
-import by.incubator.autopark.vehicle.VehicleType;
+import by.incubator.autopark.parsers.csv_parsers.VehicleTypeParserFromCsvFile;
 import lombok.SneakyThrows;
 
 import java.util.List;
@@ -12,11 +12,17 @@ import java.util.List;
 public class TypesService {
     @Autowired
     EntityManager entityManager;
-
+    @Autowired
+    VehicleTypeParserFromCsvFile parser;
+    List<TypeEntity> typeEntityList;
     @SneakyThrows
     @InitMethod
     public void init() {
+        this.typeEntityList = parser.loadTypeEntities();
+    }
 
+    public void loadTypeEntitiesIntoDatabase() {
+        typeEntityList.stream().forEach(this::save);
     }
 
     public TypeEntity get(Long id) {

@@ -1,5 +1,6 @@
 package by.incubator.autopark.parsers.csv_parsers;
 
+import by.incubator.autopark.entity.OrderEntity;
 import by.incubator.autopark.vehicle.Vehicle;
 
 import java.io.IOException;
@@ -7,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +17,24 @@ public class BreakingParserFromCsvFile {
 
     public BreakingParserFromCsvFile() {
 
+    }
+
+    public List<OrderEntity> loadOrderEntities() {
+        List<OrderEntity> orderEntities = new ArrayList<>();
+        List<String> ordersStringsList = readLineFromFile();
+
+        for (String csv : ordersStringsList) {
+            orderEntities.add(createOrderEntity(csv));
+        }
+
+        return orderEntities;
+    }
+
+    private OrderEntity createOrderEntity(String csvOrderString) {
+        Long vehicleId = Long.parseLong(csvOrderString.substring(0,1));
+        String order = csvOrderString.substring(1);
+
+        return new OrderEntity(vehicleId, order);
     }
 
     public void writeMapToFile(Map<String, Integer> defectsStatistics, Vehicle vehicle) {

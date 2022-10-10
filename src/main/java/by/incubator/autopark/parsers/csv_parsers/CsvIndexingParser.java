@@ -8,7 +8,7 @@ import java.util.Properties;
 
 public class CsvIndexingParser {
     static final Map<String, Integer> CSV_INDEX = new HashMap<>();
-    private static final String CSV_CONFIG_PATH = "src/main/resources/csv/csv-indexing.properties";
+    private static final String CSV_CONFIG_PATH = "src/main/resources/properties/csv-indexing.properties";
 
     static {
         try {
