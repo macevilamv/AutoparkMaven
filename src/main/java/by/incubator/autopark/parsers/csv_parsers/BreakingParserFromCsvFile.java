@@ -1,7 +1,8 @@
 package by.incubator.autopark.parsers.csv_parsers;
 
 import by.incubator.autopark.entity.OrderEntity;
-import by.incubator.autopark.vehicle.Vehicle;
+import by.incubator.autopark.parsers.interfaces.BreakingParserInterface;
+import by.incubator.autopark.vehicle.Driveable;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class BreakingParserFromCsvFile {
+public class BreakingParserFromCsvFile implements BreakingParserInterface {
     private static final String FILE_PATH = "src/main/resources/csv/orders.csv";
 
     public BreakingParserFromCsvFile() {
@@ -21,7 +22,7 @@ public class BreakingParserFromCsvFile {
 
     public List<OrderEntity> loadOrderEntities() {
         List<OrderEntity> orderEntities = new ArrayList<>();
-        List<String> ordersStringsList = readLineFromFile();
+        List<String> ordersStringsList = readLineFromStorage();
 
         for (String csv : ordersStringsList) {
             orderEntities.add(createOrderEntity(csv));
@@ -37,7 +38,8 @@ public class BreakingParserFromCsvFile {
         return new OrderEntity(vehicleId, order);
     }
 
-    public void writeMapToFile(Map<String, Integer> defectsStatistics, Vehicle vehicle) {
+    @Override
+    public void writeBreakingsToStorage(Map<String, Integer> defectsStatistics, Driveable vehicle) {
         try {
             Files.write(Paths.get(FILE_PATH),
                     getLine(defectsStatistics, vehicle).getBytes(StandardCharsets.UTF_8),
@@ -46,16 +48,20 @@ public class BreakingParserFromCsvFile {
             e.printStackTrace();
         }
     }
+    @Override
+    public void clean(Driveable vehicle) {
+        List<String> list = readLineFromStorage();
+        String regex = vehicle.getId() + ".*";
 
-    public static void writeListToFile(List<String> list) {
+        list.removeIf(i -> i.matches(regex));
         try {
             Files.write(Paths.get(FILE_PATH), list, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-    public List<String> readLineFromFile() {
+    @Override
+    public List<String> readLineFromStorage() {
         List<String> buffer = null;
 
         try {
@@ -66,7 +72,7 @@ public class BreakingParserFromCsvFile {
         return buffer;
     }
 
-    private String getLine(Map<String, Integer> defectsStatistics, Vehicle vehicle) {
+    private String getLine(Map<String, Integer> defectsStatistics, Driveable vehicle) {
         String line = String.valueOf(vehicle.getId());
 
         for (Map.Entry<String, Integer> entry:

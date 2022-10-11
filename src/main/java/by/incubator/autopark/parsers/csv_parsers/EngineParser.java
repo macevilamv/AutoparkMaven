@@ -31,7 +31,7 @@ public class EngineParser {
             throw new RuntimeException("Such engine doesn't exist");
         }
     }
-    public static List<EngineEntity> loadEngineEntities() {
+    public List<EngineEntity> loadEngineEntities() {
         List<String> vehicleParametersBuffer = VehicleParserFromCsvFile.generateVehicleParameters();
         List<EngineEntity> engineEntities = new ArrayList<>();
 
@@ -48,18 +48,22 @@ public class EngineParser {
         Double consumption;
         Double capacity;
         Double engineVolume;
+        Double taxCoeff;
 
         if (engineType.equalsIgnoreCase("electrical")) {
             consumption = Double.parseDouble(engineParameters[CsvIndexingParser.CSV_INDEX.get("VEHICLE-CSV_EL_CONS")]);
             capacity = Double.parseDouble(engineParameters[CsvIndexingParser.CSV_INDEX.get("VEHICLE-CSV_BATTERY")]);
             engineVolume = 0.0d;
+            taxCoeff = 0.1d;
         } else {
             engineType = engineParameters[CsvIndexingParser.CSV_INDEX.get("VEHICLE-CSV_ENGINE")];
             engineVolume =  Double.parseDouble(engineParameters[CsvIndexingParser.CSV_INDEX.get("VEHICLE-CSV_VOLUME")]);
             capacity = Double.parseDouble(engineParameters[CsvIndexingParser.CSV_INDEX.get("VEHICLE-CSV_TANK_SIZE")]);
             consumption = Double.parseDouble(engineParameters[CsvIndexingParser.CSV_INDEX.get("VEHICLE-CSV_FUEL_CONS")]);
-       }
 
-       return new EngineEntity(engineType, capacity, consumption, engineVolume);
+            taxCoeff = engineType.equalsIgnoreCase("Diesel")? 1.2 : 1.1;
+        }
+
+       return new EngineEntity(engineType, capacity, consumption, engineVolume, taxCoeff);
     }
 }

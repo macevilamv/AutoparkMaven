@@ -36,4 +36,8 @@ public class TypesService {
     public Long save(TypeEntity type) {
         return entityManager.save(type);
     }
+
+    public void delete(Object obj) {
+        entityManager.delete(obj);
+    }
 }

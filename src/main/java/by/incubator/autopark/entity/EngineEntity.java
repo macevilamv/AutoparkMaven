@@ -1,5 +1,6 @@
 package by.incubator.autopark.entity;
 
+import by.incubator.autopark.infrastructure.core.annotations.InitMethod;
 import by.incubator.autopark.infrastructure.orm.annotations.Column;
 import by.incubator.autopark.infrastructure.orm.annotations.ID;
 import by.incubator.autopark.infrastructure.orm.annotations.Table;
@@ -11,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 public class EngineEntity {
     @ID
-    Integer engineId;
+    Long engineId;
     @Column(name = "engineType")
     String engineType;
     @Column(name = "capacity")
@@ -20,11 +21,17 @@ public class EngineEntity {
     Double consumption;
     @Column(name = "engineVolume")
     Double engineVolume;
+    @Column(name = "engineTaxCoeff")
+    Double engineTaxCoeff;
 
-    public EngineEntity(String engineType, Double capacity, Double consumption, Double engineVolume) {
+    @InitMethod
+    public void init(){}
+
+    public EngineEntity(String engineType, Double capacity, Double consumption, Double engineVolume, Double engineTaxCoeff) {
         this.engineType = engineType;
         this.capacity = capacity;
         this.consumption = consumption;
         this.engineVolume = engineVolume;
+        this.engineTaxCoeff = engineTaxCoeff;
     }
 }

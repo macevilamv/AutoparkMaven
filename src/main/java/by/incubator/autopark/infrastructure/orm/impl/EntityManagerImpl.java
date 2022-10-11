@@ -34,4 +34,9 @@ public class EntityManagerImpl implements EntityManager {
     public <T> List<T> getAll(Class<T> clazz) {
         return dataBaseService.getAll(clazz);
     }
+
+    @Override
+    public void delete(Object obj) {
+        dataBaseService.delete(obj);
+    }
 }

@@ -1,6 +1,7 @@
 package by.incubator.autopark.service;
 
 import by.incubator.autopark.vehicle.CarColor;
+import by.incubator.autopark.vehicle.TypeInterface;
 import by.incubator.autopark.vehicle.VehicleType;
 
 import java.util.regex.Matcher;
@@ -28,7 +29,7 @@ public class TechnicalSpecialist {
         return color != null;
     }
 
-    public static boolean validateVehicleType(VehicleType type) {
+    public static boolean validateVehicleType(TypeInterface type) {
         if (type == null) {
             return false;
         }

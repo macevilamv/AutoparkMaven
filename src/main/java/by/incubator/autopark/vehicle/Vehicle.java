@@ -3,45 +3,49 @@ package by.incubator.autopark.vehicle;
 import by.incubator.autopark.engine.CombustionEngine;
 import by.incubator.autopark.engine.Startable;
 import by.incubator.autopark.exceptions.NotVehicleException;
+import by.incubator.autopark.infrastructure.core.annotations.Autowired;
+import by.incubator.autopark.parsers.csv_parsers.VehicleParserFromCsvFile;
 import by.incubator.autopark.rent.Rent;
-import by.incubator.autopark.vehicle.CarColor;
-import by.incubator.autopark.vehicle.VehicleType;
+import by.incubator.autopark.rent.Rentable;
+import lombok.SneakyThrows;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import static by.incubator.autopark.service.TechnicalSpecialist.*;
-public class Vehicle implements Comparable<Vehicle> {
-    private VehicleType type;
+public class Vehicle implements Comparable<Vehicle>, Driveable {
+    private TypeInterface type;
+    private Long id;
     private CarColor color;
     private String model;
     private String registrationNumber;
-    private double mass;
-    private int mileage;
-    private int manufactureYear;
+    private Double weight;
+    private Integer mileage;
+    private Integer manufactureYear;
     private Startable engine;
-    private int id;
     private static int defaultCarCounter;
-    private List<Rent> rentList;
+    private List<Rentable> rentList;
+    @Autowired
+    VehicleParserFromCsvFile parser;
 
     public Vehicle() {
-        type = new VehicleType(0, "DEFAULT", 0.0d);
+        type = new VehicleType(0L, "DEFAULT", 0.0d);
         model = "DEFAULT" + defaultCarCounter++;
         registrationNumber = "DEFAULT";
         manufactureYear = 0;
         color = CarColor.WHITE;
         registrationNumber = "DEFAULT";
-        mass = 0.0;
+        weight = 0.0;
         engine = new CombustionEngine("DEFAULT", 0, 0, 0, 0);
-        id = 0;
+        id = 0L;
         rentList = new ArrayList<>();
     }
 
-    public Vehicle(int id, VehicleType type, CarColor color,
+    public Vehicle(Long id, TypeInterface type, CarColor color,
                    String model, String registrationNumber,
                    double mass, int mileage,
-                   int manufactureYear, Startable engine, List<Rent> rentList) {
+                   int manufactureYear, Startable engine, List<Rentable> rentList) {
         try {
             if (validateVehicleType(type)) {
                 this.type = type;
@@ -64,7 +68,7 @@ public class Vehicle implements Comparable<Vehicle> {
                 throw new NotVehicleException("Incorrect registration number: " + registrationNumber);
             }
             if (validateWeight(mass)) {
-                this.mass = mass;
+                this.weight = mass;
             } else {
                 throw new NotVehicleException("Incorrect weight: " + mass);
             }
@@ -86,22 +90,22 @@ public class Vehicle implements Comparable<Vehicle> {
         this.rentList = rentList;
     }
 
-    public double getTotalProfit() {
+    public Double getTotalProfit() {
         return Double.parseDouble(String.format("%.2f",getTotalIncome() - getCalcTaxPerMonth()));
     }
 
-    public double getCalcTaxPerMonth() {
+    public Double getCalcTaxPerMonth() {
         if (this.model.equals("DEFAULT") && this.registrationNumber.equals("DEFAULT"))
-            return 0;
+            return 0.0d;
 
         return Double.parseDouble(String.format("%.2f",
-                (this.mass * 0.0013) + (type.getTaxCoefficient() * engine.getTaxPerMonth() * 30) + 5));
+                (this.weight * 0.0013) + (type.getTaxCoefficient() * engine.getTaxPerMonth() * 30) + 5));
     }
 
-    public double getTotalIncome() {
-        double sum = 0.0d;
+    public Double getTotalIncome() {
+        Double sum = 0.0d;
 
-        for (Rent rent : rentList) {
+        for (Rentable rent : rentList) {
             sum += rent.getRentCost();
         }
         return sum;
@@ -114,7 +118,7 @@ public class Vehicle implements Comparable<Vehicle> {
                 + model + ", "
                 + color + ", "
                 + registrationNumber + ", "
-                + mass + ", "
+                + weight + ", "
                 + mileage + ", "
                 + manufactureYear + ", "
                 + getCalcTaxPerMonth() + ", "
@@ -154,15 +158,21 @@ public class Vehicle implements Comparable<Vehicle> {
         this.engine = engine;
     }
 
-    public VehicleType getType() {
+    public TypeInterface getType() {
         return type;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    @SneakyThrows
+    @Override
+    public String getTypeName() {
+        return this.type.getTypeName();
+    }
+
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -179,8 +189,12 @@ public class Vehicle implements Comparable<Vehicle> {
         }
     }
 
-    public CarColor getColor() {
-        return color;
+    public String getColor() {
+        return color.name();
+    }
+
+    public String getColorName() {
+        return color.name();
     }
 
     public void setColor(CarColor color) {
@@ -227,27 +241,27 @@ public class Vehicle implements Comparable<Vehicle> {
         }
     }
 
-    public double getMass() {
-        return mass;
+    public Double getWeight() {
+        return weight;
     }
 
-    public void setMass(double mass) {
+    public void setWeight(Double weight) {
         try {
-            if (validateWeight(mass)) {
-                this.mass = mass;
+            if (validateWeight(weight)) {
+                this.weight = weight;
             } else {
-                throw new NotVehicleException("Incorrect weight: " + mass);
+                throw new NotVehicleException("Incorrect weight: " + weight);
             }
         } catch (NotVehicleException e) {
             e.printStackTrace();
         }
     }
 
-    public int getMileage() {
+    public Integer getMileage() {
         return mileage;
     }
 
-    public void setMileage(int mileage) {
+    public void setMileage(Integer mileage) {
         try {
             if (validateMileage(mileage)) {
                 this.mileage = mileage;
@@ -259,11 +273,11 @@ public class Vehicle implements Comparable<Vehicle> {
         }
     }
 
-    public int getManufactureYear() {
+    public Integer getManufactureYear() {
         return manufactureYear;
     }
 
-    public void setManufactureYear(int manufactureYear) {
+    public void setManufactureYear(Integer manufactureYear) {
         try {
             if (validateManufactureYear(manufactureYear)) {
                 this.manufactureYear = manufactureYear;

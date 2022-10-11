@@ -1,6 +1,9 @@
 package by.incubator.autopark.parsers.csv_parsers;
 
 import by.incubator.autopark.entity.TypeEntity;
+import by.incubator.autopark.infrastructure.core.FactoryService;
+import by.incubator.autopark.parsers.interfaces.ParserVehicleTypeInterface;
+import by.incubator.autopark.vehicle.TypeInterface;
 import by.incubator.autopark.vehicle.VehicleType;
 
 import java.io.File;
@@ -11,14 +14,14 @@ import java.util.List;
 import static by.incubator.autopark.parsers.csv_parsers.FromCsvFileParser.readFromFile;
 import static by.incubator.autopark.utils.StringProcessor.processDataInCsvFormat;
 
-public class VehicleTypeParserFromCsvFile {
+public class VehicleTypeParserFromCsvFile implements ParserVehicleTypeInterface {
     private static final String TYPES_CSV_PATH = "src/main/resources/csv/types.csv";
 
     public VehicleTypeParserFromCsvFile() {
     }
 
-    public List<VehicleType> loadVehicleTypes() throws IOException {
-        List<VehicleType> typesList = new ArrayList<>();
+    public List<TypeInterface> loadVehicleTypes() throws IOException {
+        List<TypeInterface> typesList = new ArrayList<>();
         List<String> typesBuffer = createTypesParametersList();
 
         for (String csvString : typesBuffer) {
@@ -39,7 +42,7 @@ public class VehicleTypeParserFromCsvFile {
 
     private VehicleType createType(String csvStringOfType) {
         String[] typeParametersBuffer = csvStringOfType.split(",");
-        int id = Integer.parseInt(typeParametersBuffer[CsvIndexingParser.CSV_INDEX.get("TYPE-CSV_ID")]);;
+        Long id = Long.parseLong(typeParametersBuffer[CsvIndexingParser.CSV_INDEX.get("TYPE-CSV_ID")]);;
         String typeName = typeParametersBuffer[CsvIndexingParser.CSV_INDEX.get("TYPE-CSV_NAME")];;
         double tax = Double.parseDouble(typeParametersBuffer[CsvIndexingParser.CSV_INDEX.get("TYPE-CSV_TAX")]);;
 
@@ -51,6 +54,7 @@ public class VehicleTypeParserFromCsvFile {
         Long id = Long.parseLong(typeParametersBuffer[CsvIndexingParser.CSV_INDEX.get("TYPE-CSV_ID")]);
         String typeName = typeParametersBuffer[CsvIndexingParser.CSV_INDEX.get("TYPE-CSV_NAME")];
         Double tax = Double.parseDouble(typeParametersBuffer[CsvIndexingParser.CSV_INDEX.get("TYPE-CSV_TAX")]);
+
 
         return new TypeEntity(id, typeName, tax);
     }

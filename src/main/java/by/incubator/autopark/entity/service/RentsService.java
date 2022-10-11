@@ -36,4 +36,8 @@ public class RentsService {
     public Long save(RentEntity rent) {
         return entityManager.save(rent);
     }
+
+    public void delete(Object obj) {
+        entityManager.delete(obj);
+    }
 }

@@ -20,7 +20,6 @@ public class OrdersService {
     @InitMethod
     public void init() {
         this.orderEntityList = parser.loadOrderEntities();
-        System.out.println(orderEntityList);
     }
 
     public void loadOrderEntitiesIntoDatabase() {
@@ -37,5 +36,9 @@ public class OrdersService {
 
     public Long save(OrderEntity order) {
         return entityManager.save(order);
+    }
+
+    public void delete(Object obj) {
+        entityManager.delete(obj);
     }
 }

@@ -1,23 +1,23 @@
 package by.incubator.autopark.rent;
 
-public class Rent {
-    private int vehicleId;
+public class Rent implements Rentable {
+    private Long vehicleId;
     private String rentDate;
-    private double rentCost;
+    private Double rentCost;
 
     public Rent() {}
 
-    public Rent(int vehicleId, String rentDate, double rentCost) {
+    public Rent(Long vehicleId, String rentDate, Double rentCost) {
         this.vehicleId = vehicleId;
         this.rentDate = rentDate;
         this.rentCost = rentCost;
     }
 
-    public int getVehicleId() {
+    public Long getVehicleId() {
         return vehicleId;
     }
 
-    public void setVehicleId(int vehicleId) {
+    public void setVehicleId(Long vehicleId) {
         this.vehicleId = vehicleId;
     }
 
@@ -29,11 +29,11 @@ public class Rent {
         this.rentDate = rentDate;
     }
 
-    public double getRentCost() {
+    public Double getRentCost() {
         return rentCost;
     }
 
-    public void setRentCost(double rentCost) {
+    public void setRentCost(Double rentCost) {
         this.rentCost = rentCost;
     }
 

@@ -36,4 +36,8 @@ public class VehiclesService {
     public Long save(VehicleEntity vehicle) {
         return entityManager.save(vehicle);
     }
+
+    public void delete(Object obj) {
+        entityManager.delete(obj);
+    }
 }

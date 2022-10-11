@@ -5,11 +5,13 @@ import by.incubator.autopark.entity.VehicleEntity;
 import by.incubator.autopark.entity.service.EngineService;
 import by.incubator.autopark.engine.Startable;
 import by.incubator.autopark.exceptions.NoSuchEngineInDb;
+import by.incubator.autopark.infrastructure.core.FactoryService;
+import by.incubator.autopark.infrastructure.core.ObjectFactory;
+import by.incubator.autopark.parsers.interfaces.ParserVehicleInterface;
 import by.incubator.autopark.rent.Rent;
+import by.incubator.autopark.rent.Rentable;
 import by.incubator.autopark.service.TechnicalSpecialist;
-import by.incubator.autopark.vehicle.CarColor;
-import by.incubator.autopark.vehicle.Vehicle;
-import by.incubator.autopark.vehicle.VehicleType;
+import by.incubator.autopark.vehicle.*;
 import by.incubator.autopark.infrastructure.core.annotations.Autowired;
 import lombok.SneakyThrows;
 
@@ -22,7 +24,7 @@ import static by.incubator.autopark.parsers.csv_parsers.EngineParser.parseEngine
 import static by.incubator.autopark.parsers.csv_parsers.FromCsvFileParser.readFromFile;
 import static by.incubator.autopark.utils.StringProcessor.processDataInCsvFormat;
 
-public class VehicleParserFromCsvFile {
+public class VehicleParserFromCsvFile implements ParserVehicleInterface {
     private static final String VEHICLE_CSV_PATH = "src/main/resources/csv/vehicles.csv";
     @Autowired
     private TechnicalSpecialist technicalSpecialist;
@@ -61,13 +63,18 @@ public class VehicleParserFromCsvFile {
         Integer mileage = Integer.parseInt(vehicleParametersBuffer[CsvIndexingParser.CSV_INDEX.get("VEHICLE-CSV_MILEAGE")]);
         String color = CarColor.valueOf(vehicleParametersBuffer[CsvIndexingParser.CSV_INDEX.get("VEHICLE-CSV_COLOR")]
                 .toUpperCase(Locale.ROOT)).name();
-       Integer engineId = findEngineIdByParameters(csvStringOfVehicle);
+        Long engineId = findEngineIdByParameters(csvStringOfVehicle);
+        FactoryService service = new FactoryService();
+        ObjectFactory factory = service.getObjectFactory();
+        VehicleEntity vehicle = factory.createObject(VehicleEntity.class);
+        vehicle.setFields(typeId, model, registrationNumber, color, mass, mileage, manufactureYear, engineId);
+        vehicle.setId(id);
 
-        return new VehicleEntity(typeId, model, registrationNumber, color, mass, mileage, manufactureYear, engineId);
+        return  vehicle;
     }
 
-    public List<Vehicle> loadVehicles() throws IOException, ParseException {
-        List<Vehicle> vehicleList = new ArrayList<>();
+    public List<Driveable> loadVehicles() throws IOException, ParseException {
+        List<Driveable> vehicleList = new ArrayList<>();
         List<String> vehiclesBuffer = generateVehicleParameters();
 
         for (String csvString : vehiclesBuffer) {
@@ -85,9 +92,9 @@ public class VehicleParserFromCsvFile {
 
     private Vehicle createVehicle(String csvStringOfVehicle) throws IOException, ParseException {
         String[] vehicleParametersBuffer = csvStringOfVehicle.split(",");
-        int id = Integer.parseInt(vehicleParametersBuffer[CsvIndexingParser.CSV_INDEX.get("VEHICLE-CSV_ID")]);
+        Long id = Long.parseLong(vehicleParametersBuffer[CsvIndexingParser.CSV_INDEX.get("VEHICLE-CSV_ID")]);
         int typeId = Integer.parseInt(vehicleParametersBuffer[CsvIndexingParser.CSV_INDEX.get("VEHICLE-CSV_TYPE_ID")]);
-        VehicleType vehicleType = generateTypeById(typeId);
+        TypeInterface vehicleType = generateTypeById(typeId);
         String model = vehicleParametersBuffer[CsvIndexingParser.CSV_INDEX.get("VEHICLE-CSV_MODEL")];
         String registrationNumber = vehicleParametersBuffer[CsvIndexingParser.CSV_INDEX.get("VEHICLE-CSV_NUMBER")];
         double mass = Double.parseDouble(vehicleParametersBuffer[CsvIndexingParser.CSV_INDEX.get("VEHICLE-CSV_WEIGHT")]);
@@ -96,14 +103,14 @@ public class VehicleParserFromCsvFile {
         CarColor color = CarColor.valueOf(vehicleParametersBuffer[CsvIndexingParser.CSV_INDEX.get("VEHICLE-CSV_COLOR")].toUpperCase(Locale.ROOT));
         String engineName = vehicleParametersBuffer[CsvIndexingParser.CSV_INDEX.get("VEHICLE-CSV_ENGINE")];
         Startable engine = parseEngine(engineName, vehicleParametersBuffer);
-        List<Rent> rents = generateRentListById(id);
+        List<Rentable> rents = generateRentListById((id));
 
         return new Vehicle(id, vehicleType, color, model, registrationNumber, mass,
                 mileage, manufactureYear, engine, rents);
     }
 
-    private VehicleType generateTypeById(int typeId) throws IOException {
-        for (VehicleType vehicleType : vehicleTypeParserFromCsvFile.loadVehicleTypes()) {
+    public TypeInterface generateTypeById(int typeId) throws IOException {
+        for (TypeInterface vehicleType : vehicleTypeParserFromCsvFile.loadVehicleTypes()) {
             if (vehicleType.getId() == typeId) {
                 return vehicleType;
             }
@@ -111,18 +118,18 @@ public class VehicleParserFromCsvFile {
         throw new RuntimeException("Type with such ID doesn't exist");
     }
 
-    private List<Rent> generateRentListById(int id) throws IOException, ParseException {
-        List<Rent> rents = new ArrayList<>();
+    public List<Rentable> generateRentListById(Long id) throws IOException, ParseException {
+        List<Rentable> rents = new ArrayList<>();
 
-        for (Rent rent : rentsParserFromCsvFile.loadRents()) {
-            if (rent.getVehicleId() == id) {
+        for (Rentable rent : rentsParserFromCsvFile.loadRents()) {
+            if (Long.compare(rent.getVehicleId(), id) == 0) {
                 rents.add(rent);
             }
         }
         return rents;
     }
 
-    private Integer findEngineIdByParameters(String csvStringOfVehicle) {
+    private Long findEngineIdByParameters(String csvStringOfVehicle) {
         EngineEntity engine = engineParser.createEngineEntity(csvStringOfVehicle);
         List<EngineEntity> engineEntities = engineService.getAll(EngineEntity.class);
 

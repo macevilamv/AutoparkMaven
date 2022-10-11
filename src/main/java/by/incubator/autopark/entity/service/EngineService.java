@@ -35,4 +35,7 @@ public class EngineService {
         return entityManager.save(type);
     }
 
+    public void delete(Object obj) {
+        entityManager.delete(obj);
+    }
 }

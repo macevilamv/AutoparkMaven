@@ -2,6 +2,8 @@ package by.incubator.autopark.infrastructure.orm.service;
 
 import by.incubator.autopark.exceptions.IsNotAnnotatedByTableException;
 import by.incubator.autopark.infrastructure.core.Context;
+import by.incubator.autopark.infrastructure.core.FactoryService;
+import by.incubator.autopark.infrastructure.core.ObjectFactory;
 import by.incubator.autopark.infrastructure.core.annotations.Autowired;
 import by.incubator.autopark.infrastructure.core.annotations.InitMethod;
 import by.incubator.autopark.infrastructure.orm.ConnectionFactory;
@@ -13,6 +15,7 @@ import by.incubator.autopark.utils.StringProcessor;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -45,11 +48,15 @@ public class PostgreDataBase {
             "INSERT INTO %s(%s)\n"
                     + "VALUES (%s)\n"
                     + "RETURNING %s;";
+    private static final String DELETE_SQL_PATTERN =
+            "DELETE FROM %s\n" +
+                    "WHERE %s = %s;";
     @Autowired
     private ConnectionFactory factory;
     private Map<String, String> classToSql;
     private Map<String, String> insertPatternByClass;
     private Map<String, String> insertByClassPattern;
+    private Map<String, String> deleteByClassPattern = new HashMap<>();
     @Autowired
     private Context context;
 
@@ -59,6 +66,42 @@ public class PostgreDataBase {
         initializeInsertPatternByClass();
         initializeInsertByClassPattern();
         validateEntitiesTablesToExist();
+        initializeDeleteByClassPattern();
+
+        initializeClassToSql();
+    }
+
+    public void delete(Object obj) {
+        Field[] fields = obj.getClass().getDeclaredFields();
+        Long id = null;
+        String fieldName = "id";
+
+        for (Field field :
+                fields) {
+            if (field.isAnnotationPresent(ID.class)) {
+                Method method = null;
+                try {
+                    fieldName = field.getName();
+                    method = obj.getClass().getMethod(StringProcessor.generateGetterName(field));
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    id = (Long) method.invoke(obj);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        String sql = String.format(deleteByClassPattern.get(obj.getClass().getName()), fieldName, id);
+
+        try (Connection connection = factory.getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @SneakyThrows
@@ -113,6 +156,7 @@ public class PostgreDataBase {
             try (Connection connection = factory.getConnection();
                  Statement statement = connection.createStatement();
                  ResultSet resultSet = statement.executeQuery(sql)) {
+                resultSet.next();
                 tOptional = Optional.of(createObject(resultSet, tClass));
             }
         } else {
@@ -123,6 +167,8 @@ public class PostgreDataBase {
 
     @SneakyThrows
     public <T> T createObject(ResultSet resultSet, Class<T> clazz) {
+        FactoryService service = new FactoryService();
+        ObjectFactory factory = service.getObjectFactory();
         T object = clazz.getConstructor().newInstance();
 
         for (Field field : clazz.getDeclaredFields()) {
@@ -289,5 +335,20 @@ public class PostgreDataBase {
         }
         return id;
     }
+
+    private void initializeDeleteByClassPattern() {
+        Set<Class<?>> entities =
+                context.getConfig().getScanner().getReflections().getTypesAnnotatedWith(Table.class);
+        entities.stream().forEach(x -> putDeletePatternToMap(x));
+    }
+
+    private void putDeletePatternToMap(Class<?> clazz) {
+        String tableName = clazz.getAnnotation(Table.class).name();
+
+        String sql = String.format(DELETE_SQL_PATTERN, tableName, "%s", "%s");
+
+        deleteByClassPattern.put(clazz.getName(), sql);
+    }
+
 }
 
