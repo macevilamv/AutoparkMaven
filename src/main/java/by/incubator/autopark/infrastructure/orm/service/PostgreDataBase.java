@@ -166,7 +166,7 @@ public class PostgreDataBase {
     }
 
     @SneakyThrows
-    public <T> T createObject(ResultSet resultSet, Class<T> clazz) {
+    private  <T> T createObject(ResultSet resultSet, Class<T> clazz) {
         FactoryService service = new FactoryService();
         ObjectFactory factory = service.getObjectFactory();
         T object = clazz.getConstructor().newInstance();
@@ -207,7 +207,7 @@ public class PostgreDataBase {
                         .toMap(element -> element.getType().getName(), SqlFieldType::getInsertPattern));
     }
 
-    public void initializeInsertByClassPattern() {
+    private void initializeInsertByClassPattern() {
         this.insertByClassPattern = getTableSet()
                 .stream()
                 .collect(Collectors.toMap(key -> key.getName(),
@@ -245,7 +245,7 @@ public class PostgreDataBase {
     }
 
     @SneakyThrows
-    public void validateEntitiesTablesToExist() {
+    private void validateEntitiesTablesToExist() {
         String sql;
         String tableName;
 
@@ -266,7 +266,7 @@ public class PostgreDataBase {
         }
     }
 
-    public String makeInsertSqlQuery(Class<?> type, String tableName) {
+    private String makeInsertSqlQuery(Class<?> type, String tableName) {
         String idField = findIdField(type);
         String fields = makeFieldsForInsertQuery(type);
         String values = makeValuesForInsertQuery(type);
@@ -274,14 +274,14 @@ public class PostgreDataBase {
         return String.format(INSERT_SQL_PATTERN, tableName, fields, values, idField);
     }
 
-    public String makeCreateSqlQuery(Class<?> type, String tableName, String fields) {
+    private String makeCreateSqlQuery(Class<?> type, String tableName, String fields) {
         String idField = findIdField(type);
         String createQuery = String.format(CREATE_TABLE_SQL_PATTERN, tableName, idField, fields);
 
         return createQuery;
     }
 
-    public String makeFieldsForCreateSqlQuery(Class<?> type) {
+    private String makeFieldsForCreateSqlQuery(Class<?> type) {
         StringBuilder fields = new StringBuilder();
 
         for (Field field : type.getDeclaredFields()) {
@@ -296,7 +296,7 @@ public class PostgreDataBase {
         return fields.toString();
     }
 
-    public String makeFieldsForInsertQuery(Class<?> type) {
+    private String makeFieldsForInsertQuery(Class<?> type) {
         StringBuilder insertedFields = new StringBuilder();
 
         for (Field field : type.getDeclaredFields()) {
@@ -310,7 +310,7 @@ public class PostgreDataBase {
         return insertedFields.toString();
     }
 
-    public String makeValuesForInsertQuery(Class<?> type) {
+    private String makeValuesForInsertQuery(Class<?> type) {
         StringBuilder values = new StringBuilder();
 
         for (Field field : type.getDeclaredFields()) {
@@ -349,6 +349,5 @@ public class PostgreDataBase {
 
         deleteByClassPattern.put(clazz.getName(), sql);
     }
-
 }
 
