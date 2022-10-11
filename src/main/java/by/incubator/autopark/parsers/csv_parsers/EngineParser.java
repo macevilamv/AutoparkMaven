@@ -38,7 +38,6 @@ public class EngineParser {
         for (String csvString : vehicleParametersBuffer) {
             engineEntities.add(createEngineEntity(csvString));
         }
-
         return engineEntities;
     }
 

@@ -1,7 +1,6 @@
 package by.incubator.autopark.parsers.csv_parsers;
 
 import by.incubator.autopark.entity.TypeEntity;
-import by.incubator.autopark.infrastructure.core.FactoryService;
 import by.incubator.autopark.parsers.interfaces.ParserVehicleTypeInterface;
 import by.incubator.autopark.vehicle.TypeInterface;
 import by.incubator.autopark.vehicle.VehicleType;

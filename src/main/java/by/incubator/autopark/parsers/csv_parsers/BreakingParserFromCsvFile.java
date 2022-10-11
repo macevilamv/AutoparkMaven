@@ -27,7 +27,6 @@ public class BreakingParserFromCsvFile implements BreakingParserInterface {
         for (String csv : ordersStringsList) {
             orderEntities.add(createOrderEntity(csv));
         }
-
         return orderEntities;
     }
 

@@ -5,7 +5,6 @@ import by.incubator.autopark.engine.Startable;
 import by.incubator.autopark.exceptions.NotVehicleException;
 import by.incubator.autopark.infrastructure.core.annotations.Autowired;
 import by.incubator.autopark.parsers.csv_parsers.VehicleParserFromCsvFile;
-import by.incubator.autopark.rent.Rent;
 import by.incubator.autopark.rent.Rentable;
 import lombok.SneakyThrows;
 

@@ -8,7 +8,6 @@ import by.incubator.autopark.exceptions.NoSuchEngineInDb;
 import by.incubator.autopark.infrastructure.core.FactoryService;
 import by.incubator.autopark.infrastructure.core.ObjectFactory;
 import by.incubator.autopark.parsers.interfaces.ParserVehicleInterface;
-import by.incubator.autopark.rent.Rent;
 import by.incubator.autopark.rent.Rentable;
 import by.incubator.autopark.service.TechnicalSpecialist;
 import by.incubator.autopark.vehicle.*;
@@ -48,7 +47,6 @@ public class VehicleParserFromCsvFile implements ParserVehicleInterface {
         for (String csvString : vehicleParametersBuffer) {
             vehicleEntities.add(createVehicleEntity(csvString));
         }
-
         return vehicleEntities;
     }
 
