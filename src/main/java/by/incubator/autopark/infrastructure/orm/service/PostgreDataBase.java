@@ -80,6 +80,7 @@ public class PostgreDataBase {
                 fields) {
             if (field.isAnnotationPresent(ID.class)) {
                 Method method = null;
+
                 try {
                     fieldName = field.getName();
                     method = obj.getClass().getMethod(StringProcessor.generateGetterName(field));
@@ -93,7 +94,6 @@ public class PostgreDataBase {
                 }
             }
         }
-
         String sql = String.format(deleteByClassPattern.get(obj.getClass().getName()), fieldName, id);
 
         try (Connection connection = factory.getConnection();

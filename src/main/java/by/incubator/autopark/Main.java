@@ -23,6 +23,7 @@ public class Main {
         VehiclesService vehiclesService = objectFactory.createObject(VehiclesService.class);
         vehiclesService.loadVehicleEntitiesIntoDatabase();
         VehicleCollection collection = objectFactory.createObject(VehicleCollection.class);
+        collection.display();
         MechanicService mechanicService =  objectFactory.createObject(MechanicService.class);
         collection.getVehicles().stream().forEach(e -> mechanicService.detectBreaking(e));
         collection.getVehicles().stream().forEach(e -> mechanicService.repair(e));

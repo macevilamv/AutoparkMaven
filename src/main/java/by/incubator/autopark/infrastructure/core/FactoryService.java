@@ -48,5 +48,4 @@ public class FactoryService {
         interfaceToImplementations.put(ParserVehicleTypeInterface.class, VehicleTypeParserFromDb.class);
         interfaceToImplementations.put(BreakingParserInterface.class, BreakingsParserFromDb.class);
     }
-
 }
