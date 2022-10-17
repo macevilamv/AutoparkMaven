@@ -2,25 +2,25 @@ package by.incubator.autopark.vehicle;
 
 import java.util.Objects;
 
-public class VehicleType {
-    private int id;
+public class VehicleType implements TypeInterface {
+    private Long id;
     private String typeName;
-    private double taxCoefficient;
+    private Double taxCoefficient;
 
     VehicleType () {}
 
 
-    public VehicleType (int id, String name, double taxation) {
+    public VehicleType (Long id, String name, double taxation) {
         this.id = id;
         this.typeName = name;
         this.taxCoefficient = taxation;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -32,7 +32,7 @@ public class VehicleType {
         this.typeName = typeName;
     }
 
-    public double getTaxCoefficient() {
+    public Double getTaxCoefficient() {
         return taxCoefficient;
     }
 

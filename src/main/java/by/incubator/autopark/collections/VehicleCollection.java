@@ -1,9 +1,12 @@
 package by.incubator.autopark.collections;
 
-import by.incubator.autopark.parsers.ParserVehicleFromFile;
-import by.incubator.autopark.rent.Rent;
+import by.incubator.autopark.parsers.interfaces.ParserRentInterface;
+import by.incubator.autopark.parsers.interfaces.ParserVehicleInterface;
+import by.incubator.autopark.parsers.interfaces.ParserVehicleTypeInterface;
+import by.incubator.autopark.rent.Rentable;
+import by.incubator.autopark.vehicle.Driveable;
+import by.incubator.autopark.vehicle.TypeInterface;
 import by.incubator.autopark.vehicle.Vehicle;
-import by.incubator.autopark.vehicle.VehicleType;
 import by.incubator.autopark.infrastructure.core.annotations.Autowired;
 import by.incubator.autopark.infrastructure.core.annotations.InitMethod;
 import lombok.SneakyThrows;
@@ -11,11 +14,15 @@ import lombok.SneakyThrows;
 import java.util.*;
 
 public class VehicleCollection {
-    private List<VehicleType> types;
-    private List<Rent> rents;
-    private List<Vehicle> vehicles;
+    private List<TypeInterface> types;
+    private List<Rentable> rents;
+    private List<Driveable> vehicles;
     @Autowired
-    private ParserVehicleFromFile parser;
+    private ParserVehicleInterface vehicleParser;
+    @Autowired
+    private ParserVehicleTypeInterface typeParser;
+    @Autowired
+    private ParserRentInterface rentsParser;
 
     public VehicleCollection() {
     }
@@ -23,9 +30,9 @@ public class VehicleCollection {
     @SneakyThrows
     @InitMethod
     public void init() {
-        this.types = parser.loadTypes();
-        this.rents = parser.loadRents();
-        this.vehicles = parser.loadVehicles();
+        this.types = typeParser.loadVehicleTypes();
+        this.rents = rentsParser.loadRents();
+        this.vehicles = vehicleParser.loadVehicles();
     }
 
     public void insert(int index, Vehicle vehicle) {
@@ -48,33 +55,33 @@ public class VehicleCollection {
     public double sumTotalProfit() {
         double sum = 0.0d;
 
-        for (Vehicle vehicle : vehicles) {
+        for (Driveable vehicle : vehicles) {
             sum += vehicle.getTotalProfit();
         }
         return sum;
     }
 
-    public List<VehicleType> getTypes() {
+    public List<TypeInterface> getTypes() {
         return types;
     }
 
-    public void setTypes(List<VehicleType> types) {
+    public void setTypes(List<TypeInterface> types) {
         this.types = types;
     }
 
-    public List<Rent> getRents() {
+    public List<Rentable> getRents() {
         return rents;
     }
 
-    public void setRents(List<Rent> rents) {
+    public void setRents(List<Rentable> rents) {
         this.rents = rents;
     }
 
-    public List<Vehicle> getVehicles() {
+    public List<Driveable> getVehicles() {
         return vehicles;
     }
 
-    public void setVehicles(List<Vehicle> vehicles) {
+    public void setVehicles(List<Driveable> vehicles) {
         this.vehicles = vehicles;
     }
 

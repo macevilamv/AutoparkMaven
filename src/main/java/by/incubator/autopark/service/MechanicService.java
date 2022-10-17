@@ -1,7 +1,7 @@
 package by.incubator.autopark.service;
 
-import by.incubator.autopark.parsers.ParserBreakingsFromFile;
-import by.incubator.autopark.vehicle.Vehicle;
+import by.incubator.autopark.parsers.interfaces.BreakingParserInterface;
+import by.incubator.autopark.vehicle.Driveable;
 import by.incubator.autopark.infrastructure.core.annotations.Autowired;
 
 import java.util.HashMap;
@@ -13,35 +13,31 @@ public class MechanicService implements Fixer {
             {"Фильтр", "Втулка", "Вал", "Ось", "Свеча", "Масло", "ГРМ", "ШРУС"};
     private final int MAX_DEFECTS_NUM = 12;
     @Autowired
-    private ParserBreakingsFromFile parser;
+    private BreakingParserInterface parser;
 
     public MechanicService() {
     }
 
     @Override
-    public Map<String, Integer> detectBreaking(Vehicle vehicle) {
+    public Map<String, Integer> detectBreaking(Driveable vehicle) {
         Map<String, Integer> defectsStatistics = new HashMap<>();
         int defectsNumber = (int) (Math.random() * MAX_DEFECTS_NUM);
 
         initDefectsMap(defectsStatistics);
         writeToMap(defectsStatistics, defectsNumber);
-        parser.writeMapToFile(defectsStatistics, vehicle);
+        parser.writeBreakingsToStorage(defectsStatistics, vehicle);
 
         return defectsStatistics;
     }
 
     @Override
-    public void repair(Vehicle vehicle) {
-        List<String> list = parser.readLineFromFile();
-        String regex = vehicle.getId() + ".*";
-
-        list.removeIf(i -> i.matches(regex));
-        parser.writeListToFile(list);
+    public void repair(Driveable vehicle) {
+        parser.clean(vehicle);
     }
 
     @Override
-    public boolean isBroken(Vehicle vehicle) {
-        List<String> list = parser.readLineFromFile();
+    public boolean isBroken(Driveable vehicle) {
+        List<String> list = parser.readLineFromStorage();
 
         for (String string : list) {
             if (vehicle.getId() == string.charAt(0)) {

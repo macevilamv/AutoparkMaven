@@ -1,10 +1,10 @@
-package by.incubator.autopark.parsers;
+package by.incubator.autopark.parsers.csv_parsers;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileParser {
+public class FromCsvFileParser {
     public static List<String> readFromFile(File file) throws IOException {
         List<String> buffer = new ArrayList<>();
         String string = "";

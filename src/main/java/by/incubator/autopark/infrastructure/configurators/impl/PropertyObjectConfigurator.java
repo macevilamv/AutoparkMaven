@@ -8,6 +8,7 @@ import lombok.SneakyThrows;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -19,11 +20,11 @@ public class PropertyObjectConfigurator implements ObjectConfigurator {
     @SneakyThrows
     public PropertyObjectConfigurator() {
         URL path = this.getClass().getClassLoader()
-                .getResource("application.properties");
+                .getResource("properties/application.properties");
 
         if (path == null) {
             throw new FileNotFoundException(String.format("File %s not found",
-                    "application.properties"));
+                    "properties/application.properties"));
         }
         Stream<String> lines = new BufferedReader(
                 new InputStreamReader(path.openStream())).lines();
@@ -35,14 +36,16 @@ public class PropertyObjectConfigurator implements ObjectConfigurator {
     @SneakyThrows
     public void configure(Object object, Context context) {
         String key;
+        Object element;
 
-        if (object.getClass().isAnnotationPresent(Property.class)) {
-            if (object.getClass().getAnnotation(Property.class).value().equals("")) {
-                key = object.getClass().getSimpleName();
-            } else {
-                key = object.getClass().getAnnotation(Property.class).value();
+        for (Field field : object.getClass()
+                .getDeclaredFields()) {
+            if (field.isAnnotationPresent(Property.class)) {
+                key = field.getName();
+                element = properties.get(key);
+                field.setAccessible(true);
+                field.set(object, element);
             }
-            object = properties.get(key);
         }
     }
 }
