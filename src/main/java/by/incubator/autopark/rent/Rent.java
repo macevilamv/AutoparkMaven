@@ -1,16 +1,25 @@
 package by.incubator.autopark.rent;
 
 public class Rent implements Rentable {
+    private Long RentId;
     private Long vehicleId;
     private String rentDate;
     private Double rentCost;
+    private static Long rentCounter = 0L;
 
     public Rent() {}
 
     public Rent(Long vehicleId, String rentDate, Double rentCost) {
+        rentCounter++;
         this.vehicleId = vehicleId;
         this.rentDate = rentDate;
         this.rentCost = rentCost;
+        this.RentId = rentCounter;
+    }
+
+    @Override
+    public Long getRentId() {
+        return this.RentId;
     }
 
     public Long getVehicleId() {

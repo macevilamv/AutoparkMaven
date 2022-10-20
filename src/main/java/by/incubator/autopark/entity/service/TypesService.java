@@ -7,6 +7,7 @@ import by.incubator.autopark.infrastructure.orm.EntityManager;
 import by.incubator.autopark.parsers.csv_parsers.VehicleTypeParserFromCsvFile;
 import lombok.SneakyThrows;
 
+import java.io.IOException;
 import java.util.List;
 
 public class TypesService {
@@ -18,10 +19,10 @@ public class TypesService {
     @SneakyThrows
     @InitMethod
     public void init() {
-        this.typeEntityList = parser.loadTypeEntities();
     }
 
-    public void loadTypeEntitiesIntoDatabase() {
+    public void loadTypeEntitiesFromCsvIntoDatabase() throws IOException {
+        this.typeEntityList = parser.loadTypeEntities();
         typeEntityList.stream().forEach(this::save);
     }
 

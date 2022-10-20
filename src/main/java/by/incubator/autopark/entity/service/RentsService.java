@@ -7,6 +7,7 @@ import by.incubator.autopark.infrastructure.orm.EntityManager;
 import by.incubator.autopark.parsers.csv_parsers.RentsParserFromCsvFile;
 import lombok.SneakyThrows;
 
+import java.io.IOException;
 import java.util.List;
 
 public class RentsService {
@@ -18,10 +19,10 @@ public class RentsService {
     @SneakyThrows
     @InitMethod
     public void init() {
-        this.rentEntityList = parser.loadRentEntities();
     }
 
-    public void loadRentEntitiesIntoDatabase() {
+    public void loadRentEntitiesFromCsvIntoDatabase() throws IOException {
+        this.rentEntityList = parser.loadRentEntities();
         rentEntityList.stream().forEach(this::save);
     }
 

@@ -17,6 +17,11 @@ public class CombustionEngine extends AbstractEngine {
     }
 
     @Override
+    public String getName() {
+        return engineName;
+    }
+
+    @Override
     public double getTaxPerMonth() {
         return this.engineTypeTaxCoefficient;
     }
@@ -24,6 +29,21 @@ public class CombustionEngine extends AbstractEngine {
     @Override
     public double getMaxKilometers() {
         return ((fuelTankCapacity * 100) / fuelConsumptionPer100);
+    }
+
+    @Override
+    public double getCapacity() {
+        return this.fuelTankCapacity;
+    }
+
+    @Override
+    public double getConsumption() {
+        return this.fuelConsumptionPer100;
+    }
+
+    @Override
+    public double getVolume() {
+        return this.engineVolume;
     }
 
     public double getEngineVolume() {

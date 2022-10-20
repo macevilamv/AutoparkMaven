@@ -28,6 +28,22 @@ public class Workroom {
         return driveableList;
     }
 
+    public List<Long> getRepairedVehiclesId(List<Driveable> vehicles) {
+        List<Long> list = new ArrayList<>();
+
+        vehicles
+                .stream()
+                .forEach(vehicle -> {
+                    mechanic.detectBreaking(vehicle);
+                    if (mechanic.isBroken(vehicle)) {
+                        list.add(vehicle.getId());
+                        mechanic.repair(vehicle);
+                    }
+                });
+
+        return list;
+    }
+
     public void checkAllVehicle(List<Driveable> vehicleList) {
         for (Driveable vehicle : vehicleList) {
             mechanic.detectBreaking(vehicle);

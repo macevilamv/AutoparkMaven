@@ -29,19 +29,28 @@ import by.incubator.autopark.vehicle.VehicleType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FactoryService {
-   private Map<Class<?>, Class<?>> interfaceToImplementations = new HashMap<>();
-   private ApplicationContext context = new ApplicationContext("by", interfaceToImplementations);
+public class ContextService {
+    ApplicationContext context;
+    public ApplicationContext getContext() {
+        this.context = new ApplicationContext("by", getConfiguredInterfaceToImplementations());
 
-
-    public ObjectFactory getObjectFactory() {
-        configure();
-        ObjectFactory factory = new ObjectFactoryImpl(context);
-
-        return new ObjectFactoryImpl(context);
+        return context;
     }
 
-    public void configure() {
+    public Map<Class<?>, Class<?>> getConfiguredInterfaceToImplementations() {
+       Map<Class<?>, Class<?>> interfaceToImplementations = new HashMap<>();
+       configure(interfaceToImplementations);
+
+       return interfaceToImplementations;
+    }
+    private void configure(Map<Class<?>, Class<?>> interfaceToImplementations ) {
+//        interfaceToImplementations.put(Rentable.class, Rent.class);
+//        interfaceToImplementations.put(Driveable.class, Vehicle.class);
+//        interfaceToImplementations.put(TypeInterface.class, VehicleType.class);
+//        interfaceToImplementations.put(ParserVehicleInterface.class, VehicleParserFromCsvFile.class);
+//        interfaceToImplementations.put(ParserRentInterface.class, RentsParserFromCsvFile.class);
+//        interfaceToImplementations.put(ParserVehicleTypeInterface.class, VehicleTypeParserFromCsvFile.class);
+//        interfaceToImplementations.put(BreakingParserInterface.class, BreakingParserFromCsvFile.class);
         interfaceToImplementations.put(Rentable.class, RentEntity.class);
         interfaceToImplementations.put(Driveable.class, VehicleEntity.class);
         interfaceToImplementations.put(TypeInterface.class, TypeEntity.class);

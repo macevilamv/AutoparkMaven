@@ -1,0 +1,59 @@
+* {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.ml-20 {
+    margin: 15px;
+}
+
+table {
+    display: flex;
+    width: 100%;
+    border: 5px gray;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+tbody {
+    width: 100%;
+}
+
+.vertical-center {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.flex {
+    display: flex;
+}
+
+form div, form button {
+    width: 10%;
+}
+
+tr {
+    width: 100%;
+
+}
+
+th, td {
+    width: 13%;
+    border: 1px solid grey;
+}
+
+.center-flex-full-vh {
+    display: flex;
+    align-items: center;
+}
+
+.center-flex-full-vh a {
+    text-align: center;
+}
