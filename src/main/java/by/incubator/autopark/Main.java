@@ -16,19 +16,5 @@ import java.text.ParseException;
 public class Main {
     @SneakyThrows
     public static void main(String[] args) {
-//        ContextService service = new ContextService();
-//        ApplicationContext context = service.getContext();
-//        TypesService typesService = context.getObject(TypesService.class);
-//        RentsService rentsService = context.getObject(RentsService.class);
-//        EngineService engineService = context.getObject(EngineService.class);
-//        OrdersService ordersService = context.getObject(OrdersService.class);
-//        VehiclesService vehiclesService = context.getObject(VehiclesService.class);
-//        engineService.loadEngineEntitiesIntoDatabase();
-//        typesService.loadTypeEntitiesIntoDatabase();
-//        rentsService.loadRentEntitiesIntoDatabase();
-//        ordersService.loadOrderEntitiesIntoDatabase();
-//        vehiclesService.loadVehicleEntitiesIntoDatabase();
-//        VehicleCollection collection = context.getObject(VehicleCollection.class);
-//        collection.display();
     }
 }
