@@ -44,13 +44,6 @@ public class ContextService {
        return interfaceToImplementations;
     }
     private void configure(Map<Class<?>, Class<?>> interfaceToImplementations ) {
-//        interfaceToImplementations.put(Rentable.class, Rent.class);
-//        interfaceToImplementations.put(Driveable.class, Vehicle.class);
-//        interfaceToImplementations.put(TypeInterface.class, VehicleType.class);
-//        interfaceToImplementations.put(ParserVehicleInterface.class, VehicleParserFromCsvFile.class);
-//        interfaceToImplementations.put(ParserRentInterface.class, RentsParserFromCsvFile.class);
-//        interfaceToImplementations.put(ParserVehicleTypeInterface.class, VehicleTypeParserFromCsvFile.class);
-//        interfaceToImplementations.put(BreakingParserInterface.class, BreakingParserFromCsvFile.class);
         interfaceToImplementations.put(Rentable.class, RentEntity.class);
         interfaceToImplementations.put(Driveable.class, VehicleEntity.class);
         interfaceToImplementations.put(TypeInterface.class, TypeEntity.class);
