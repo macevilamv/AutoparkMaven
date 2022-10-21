@@ -19,6 +19,8 @@ import by.incubator.autopark.parsers.interfaces.ParserVehicleInterface;
 import by.incubator.autopark.parsers.interfaces.ParserVehicleTypeInterface;
 import by.incubator.autopark.rent.Rent;
 import by.incubator.autopark.rent.Rentable;
+import by.incubator.autopark.service.Fixer;
+import by.incubator.autopark.service.MechanicService;
 import by.incubator.autopark.vehicle.Driveable;
 import by.incubator.autopark.vehicle.TypeInterface;
 import by.incubator.autopark.vehicle.Vehicle;
@@ -47,6 +49,6 @@ public class FactoryService {
         interfaceToImplementations.put(ParserRentInterface.class, RentParserFromDb.class);
         interfaceToImplementations.put(ParserVehicleTypeInterface.class, VehicleTypeParserFromDb.class);
         interfaceToImplementations.put(BreakingParserInterface.class, BreakingsParserFromDb.class);
+        interfaceToImplementations.put(Fixer.class, MechanicService.class);
     }
-
 }

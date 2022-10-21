@@ -1,8 +1,10 @@
 package by.incubator.autopark.service;
 
+import by.incubator.autopark.vehicle.Driveable;
 import by.incubator.autopark.vehicle.Vehicle;
 import by.incubator.autopark.infrastructure.core.annotations.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Workroom {
@@ -12,22 +14,36 @@ public class Workroom {
     public Workroom() {
     }
 
-    public void checkAllVehicle(List<Vehicle> vehicleList) {
-        for (Vehicle vehicle : vehicleList) {
+    public List<Driveable> getRepairedVehicles(List<Driveable> vehicles) {
+        List<Driveable> driveableList = new ArrayList<>();
+
+        vehicles.stream()
+                .forEach(vehicle -> {
+                    showCurrentTechnicalStatus(vehicle);
+                    if (!mechanic.isBroken(vehicle)) {
+                       driveableList.add(vehicle);
+                    }
+                });
+
+        return driveableList;
+    }
+
+    public void checkAllVehicle(List<Driveable> vehicleList) {
+        for (Driveable vehicle : vehicleList) {
             mechanic.detectBreaking(vehicle);
-
-            if (mechanic.isBroken(vehicle)) {
-                System.out.println(vehicle + " is broken");
-            }
-        }
-
-        for (Vehicle vehicle : vehicleList) {
-            if (!mechanic.isBroken(vehicle)) {
-                System.out.println(vehicle + "in great condition");
-            }
+            showCurrentTechnicalStatus(vehicle);
         }
     }
 
+    private void showCurrentTechnicalStatus(Driveable vehicle) {
+        if (!mechanic.isBroken(vehicle)) {
+            System.out.println("Vehicle: " + vehicle.getModel() + " id: " + vehicle.getId() + " works properly");
+        } else {
+            System.out.println("Vehicle: " + vehicle.getModel() + " id: " + vehicle.getId()
+                    + "doesn't work properly. Is being repaired...");
+            mechanic.repair(vehicle);
+        }
+    }
 
     public Fixer getMechanic() {
         return mechanic;

@@ -1,6 +1,6 @@
 package by.incubator.autopark.infrastructure.config.impl;
 
-import by.incubator.autopark.infrastructure.core.Config;
+import by.incubator.autopark.infrastructure.config.Config;
 import by.incubator.autopark.infrastructure.core.Scanner;
 import lombok.AllArgsConstructor;
 

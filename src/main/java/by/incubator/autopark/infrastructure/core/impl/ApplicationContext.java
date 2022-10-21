@@ -1,7 +1,7 @@
 package by.incubator.autopark.infrastructure.core.impl;
 
 import by.incubator.autopark.infrastructure.core.Cache;
-import by.incubator.autopark.infrastructure.core.Config;
+import by.incubator.autopark.infrastructure.config.Config;
 import by.incubator.autopark.infrastructure.core.Context;
 import by.incubator.autopark.infrastructure.core.ObjectFactory;
 import by.incubator.autopark.infrastructure.config.impl.JavaConfig;
