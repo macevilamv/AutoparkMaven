@@ -2,10 +2,11 @@ package by.incubator.autopark.infrastructure.orm.service;
 
 import by.incubator.autopark.exceptions.IsNotAnnotatedByTableException;
 import by.incubator.autopark.infrastructure.core.Context;
-import by.incubator.autopark.infrastructure.core.FactoryService;
+import by.incubator.autopark.infrastructure.core.ContextService;
 import by.incubator.autopark.infrastructure.core.ObjectFactory;
 import by.incubator.autopark.infrastructure.core.annotations.Autowired;
 import by.incubator.autopark.infrastructure.core.annotations.InitMethod;
+import by.incubator.autopark.infrastructure.core.impl.ApplicationContext;
 import by.incubator.autopark.infrastructure.orm.ConnectionFactory;
 import by.incubator.autopark.infrastructure.orm.annotations.Column;
 import by.incubator.autopark.infrastructure.orm.annotations.ID;
@@ -167,8 +168,6 @@ public class PostgreDataBase {
 
     @SneakyThrows
     private  <T> T createObject(ResultSet resultSet, Class<T> clazz) {
-        FactoryService service = new FactoryService();
-        ObjectFactory factory = service.getObjectFactory();
         T object = clazz.getConstructor().newInstance();
 
         for (Field field : clazz.getDeclaredFields()) {

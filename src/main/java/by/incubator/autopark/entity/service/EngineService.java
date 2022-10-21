@@ -16,10 +16,10 @@ public class EngineService {
     List<EngineEntity> engineEntities;
     @InitMethod
     public void init() {
-        engineEntities = parser.loadEngineEntities();
     }
 
-    public void loadEngineEntitiesIntoDatabase() {
+    public void loadEngineEntitiesFromCsvIntoDatabase() {
+        engineEntities = parser.loadEngineEntities();
         engineEntities.stream().forEach(this::save);
     }
 

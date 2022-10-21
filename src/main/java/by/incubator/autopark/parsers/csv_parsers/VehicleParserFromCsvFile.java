@@ -5,7 +5,7 @@ import by.incubator.autopark.entity.VehicleEntity;
 import by.incubator.autopark.entity.service.EngineService;
 import by.incubator.autopark.engine.Startable;
 import by.incubator.autopark.exceptions.NoSuchEngineInDb;
-import by.incubator.autopark.infrastructure.core.FactoryService;
+import by.incubator.autopark.infrastructure.core.ContextService;
 import by.incubator.autopark.infrastructure.core.ObjectFactory;
 import by.incubator.autopark.parsers.interfaces.ParserVehicleInterface;
 import by.incubator.autopark.rent.Rentable;
@@ -62,9 +62,8 @@ public class VehicleParserFromCsvFile implements ParserVehicleInterface {
         String color = CarColor.valueOf(vehicleParametersBuffer[CsvIndexingParser.CSV_INDEX.get("VEHICLE-CSV_COLOR")]
                 .toUpperCase(Locale.ROOT)).name();
         Long engineId = findEngineIdByParameters(csvStringOfVehicle);
-        FactoryService service = new FactoryService();
-        ObjectFactory factory = service.getObjectFactory();
-        VehicleEntity vehicle = factory.createObject(VehicleEntity.class);
+        ContextService service = new ContextService();
+        VehicleEntity vehicle = service.getContext().getObject(VehicleEntity.class);
         vehicle.setFields(typeId, model, registrationNumber, color, mass, mileage, manufactureYear, engineId);
         vehicle.setId(id);
 
@@ -134,7 +133,7 @@ public class VehicleParserFromCsvFile implements ParserVehicleInterface {
         for (EngineEntity entity : engineEntities) {
             if ((Double.compare(engine.getCapacity(), entity.getCapacity()) == 0)
                 && (Double.compare(engine.getConsumption(), entity.getConsumption()) == 0)
-                && entity.getEngineType().equals(engine.getEngineType())) {
+                && entity.getEngineName().equals(engine.getEngineName())) {
 
                 return entity.getEngineId();
             }

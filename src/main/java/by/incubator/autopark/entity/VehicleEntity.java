@@ -1,10 +1,12 @@
 package by.incubator.autopark.entity;
 
+import by.incubator.autopark.engine.Startable;
 import by.incubator.autopark.entity.service.*;
 import by.incubator.autopark.infrastructure.orm.annotations.Column;
 import by.incubator.autopark.infrastructure.orm.annotations.ID;
 import by.incubator.autopark.infrastructure.orm.annotations.Table;
 import by.incubator.autopark.vehicle.Driveable;
+import by.incubator.autopark.vehicle.TypeInterface;
 import lombok.*;
 
 import java.util.List;
@@ -15,8 +17,8 @@ import java.util.List;
 public class VehicleEntity implements Driveable {
     @ID
     private Long id;
-    @Column(name = "type")
-    private Long type;
+    @Column(name = "typeId")
+    private Long typeId;
     @Column(name = "model")
     private String model;
     @Column(name = "registrationNumber")
@@ -29,20 +31,20 @@ public class VehicleEntity implements Driveable {
     private Integer mileage;
     @Column(name = "manufactureYear")
     private Integer manufactureYear;
-    @Column(name = "engine")
-    private Long engine;
+    @Column(name = "engineId")
+    private Long engineId;
     @Column(name = "totalIncome")
     private Double totalIncome = 0.0d;
 
     public void setFields(Long type, String model, String registrationNumber, String color, Double weight, Integer mileage, Integer manufactureYear, Long engine) {
-        this.type = type;
+        this.typeId = type;
         this.model = model;
         this.registrationNumber = registrationNumber;
         this.color = color;
         this.weight = weight;
         this.mileage = mileage;
         this.manufactureYear = manufactureYear;
-        this.engine = engine;
+        this.engineId = engine;
     }
 
     @Override
@@ -50,16 +52,26 @@ public class VehicleEntity implements Driveable {
         return id;
     }
 
+    @Override
+    public Long getTypeId() {
+        return typeId;
+    }
+
+    @Override
+    public Startable getEngine() {
+        return (Startable) EntitiesService.getEngine(this.engineId);
+    }
+
+    public TypeInterface getType() {
+        return EntitiesService.getType(this.typeId);
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getType() {
-        return type;
-    }
-
-    public void setType(Long type) {
-        this.type = type;
+    public void setTypeId(Long typeId) {
+        this.typeId = typeId;
     }
 
     @Override
@@ -115,12 +127,12 @@ public class VehicleEntity implements Driveable {
         this.manufactureYear = manufactureYear;
     }
 
-    public Long getEngine() {
-        return engine;
+    public Long getEngineId() {
+        return engineId;
     }
 
-    public void setEngine(Long engine) {
-        this.engine = engine;
+    public void setEngineId(Long engineId) {
+        this.engineId = engineId;
     }
 
     public void setTotalIncome(Double totalIncome) {
@@ -129,7 +141,7 @@ public class VehicleEntity implements Driveable {
 
     @Override
     public String getTypeName() {
-        return EntitiesService.getType(type).getName();
+        return EntitiesService.getType(typeId).getName();
     }
 
     @Override
@@ -154,7 +166,7 @@ public class VehicleEntity implements Driveable {
     public Double getCalcTaxPerMonth() {
 
         return Double.parseDouble(String.format("%.2f",
-                (this.weight * 0.0013) + (EntitiesService.getType(type).getTaxationCoefficient()
-                        * EntitiesService.getEngine(engine).getEngineTaxCoeff() * 30) + 5));
+                (this.weight * 0.0013) + (EntitiesService.getType(typeId).getTaxationCoefficient()
+                        * EntitiesService.getEngine(engineId).getEngineTaxCoeff() * 30) + 5));
     }
 }

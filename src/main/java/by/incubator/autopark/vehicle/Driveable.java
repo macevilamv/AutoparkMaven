@@ -1,7 +1,11 @@
 package by.incubator.autopark.vehicle;
 
+import by.incubator.autopark.engine.Startable;
+
 public interface Driveable {
     Long getId();
+    Long getTypeId();
+    TypeInterface getType();
     String getTypeName();
     String getModel();
     String getRegistrationNumber();
@@ -12,4 +16,5 @@ public interface Driveable {
     Double getTotalIncome();
     Double getCalcTaxPerMonth();
     Double getTotalProfit();
+    Startable getEngine();
 }

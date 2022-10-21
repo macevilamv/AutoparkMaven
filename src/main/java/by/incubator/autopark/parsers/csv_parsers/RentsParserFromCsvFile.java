@@ -1,7 +1,6 @@
 package by.incubator.autopark.parsers.csv_parsers;
 
 import by.incubator.autopark.entity.RentEntity;
-import by.incubator.autopark.infrastructure.core.FactoryService;
 import by.incubator.autopark.parsers.interfaces.ParserRentInterface;
 import by.incubator.autopark.rent.Rent;
 import by.incubator.autopark.rent.Rentable;

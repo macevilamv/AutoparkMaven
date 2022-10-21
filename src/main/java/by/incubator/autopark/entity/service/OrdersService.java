@@ -19,10 +19,10 @@ public class OrdersService {
     @SneakyThrows
     @InitMethod
     public void init() {
-        this.orderEntityList = parser.loadOrderEntities();
     }
 
-    public void loadOrderEntitiesIntoDatabase() {
+    public void loadOrderEntitiesFromCsvIntoDatabase() {
+        this.orderEntityList = parser.loadOrderEntities();
         orderEntityList.stream().forEach(this::save);
     }
 

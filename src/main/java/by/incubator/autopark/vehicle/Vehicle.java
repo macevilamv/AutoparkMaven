@@ -93,6 +93,11 @@ public class Vehicle implements Comparable<Vehicle>, Driveable {
         return Double.parseDouble(String.format("%.2f",getTotalIncome() - getCalcTaxPerMonth()));
     }
 
+    @Override
+    public Startable getEngine() {
+        return this.engine;
+    }
+
     public Double getCalcTaxPerMonth() {
         if (this.model.equals("DEFAULT") && this.registrationNumber.equals("DEFAULT"))
             return 0.0d;
@@ -149,7 +154,7 @@ public class Vehicle implements Comparable<Vehicle>, Driveable {
         }
     }
 
-    public Startable getEngine() {
+    public Startable getEngineId() {
         return engine;
     }
 
@@ -163,6 +168,11 @@ public class Vehicle implements Comparable<Vehicle>, Driveable {
 
     public Long getId() {
         return id;
+    }
+
+    @Override
+    public Long getTypeId() {
+        return this.type.getId();
     }
 
     @SneakyThrows

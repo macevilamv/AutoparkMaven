@@ -14,6 +14,11 @@ public class ElectricalEngine extends AbstractEngine {
     }
 
     @Override
+    public String getName() {
+        return "Electrical";
+    }
+
+    @Override
     public double getTaxPerMonth() {
         return this.engineTypeTaxCoefficient;
     }
@@ -21,6 +26,21 @@ public class ElectricalEngine extends AbstractEngine {
     @Override
     public double getMaxKilometers() {
         return batterySize / electricityConsumption;
+    }
+
+    @Override
+    public double getCapacity() {
+        return batterySize;
+    }
+
+    @Override
+    public double getConsumption() {
+        return this.electricityConsumption;
+    }
+
+    @Override
+    public double getVolume() {
+        return 0;
     }
 
     public double getBatterySize() {

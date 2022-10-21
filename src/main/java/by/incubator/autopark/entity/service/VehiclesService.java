@@ -18,10 +18,11 @@ public class VehiclesService {
     @SneakyThrows
     @InitMethod
     public void init() {
-        this.vehicleEntityList = parser.loadVehicleEntities();
+
     }
 
-    public void loadVehicleEntitiesIntoDatabase() {
+    public void loadVehicleEntitiesFromCsvIntoDatabase() {
+        this.vehicleEntityList = parser.loadVehicleEntities();
         vehicleEntityList.stream().forEach(this::save);
     }
 
